@@ -74,8 +74,9 @@ func Shoot():
 		
 		
 func Drop():
-	var droppedVersion = droppedVersion.instance()
-	droppedVersion.transform = gunMuzzle.global_transform	#drop at the muzzle so it drops visibly in front of the player
+	
+	var dropped = droppedVersion.instance()
+	dropped.transform = gunMuzzle.global_transform	#drop at the muzzle so it drops visibly in front of the player
 	#droppedWeapon.position = weaponDropPos.position
-	get_tree().current_scene.add_child(droppedVersion)
+	get_tree().current_scene.add_child(dropped)
 	queue_free()

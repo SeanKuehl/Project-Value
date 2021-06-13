@@ -25,3 +25,9 @@ one_shot = true
 
 [node name="DropWeaponSpot" type="Position2D" parent="."]
 position = Vector2( 0, 4.24264 )
+
+[node name="GunMuzzle" type="Position2D" parent="."]
+position = Vector2( 56.922, 9.54594 )
+
+[node name="ShootRateTimer" type="Timer" parent="."]
+one_shot = true

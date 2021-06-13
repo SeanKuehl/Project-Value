@@ -9,6 +9,7 @@ var velocity = Vector2.ZERO
 
 var playerWeapon = 0
 var playerWantsToPickupWeapon = false
+var knife = load("res://Weapons/Knife.tscn")
 
 func _ready():
 	pass
@@ -37,16 +38,12 @@ func EquipWeapon(weapon):
 	#print("this worked!")
 
 func Reload():
-	if playerWeapon == 0:
-		pass
-	else:
-		playerWeapon.Reload()
+	
+	playerWeapon.Reload()
 
 func Shoot():
-	if playerWeapon == 0:
-		pass
-	else:
-		playerWeapon.Shoot() #call the weapon's shoot to handle the shooting etc
+	
+	playerWeapon.Shoot() #call the weapon's shoot to handle the shooting etc
 	#I will still want a generic weapon class to handle everything
 	
 	#var b = preload("res://PlayerBullet.tscn").instance() 	#make a new kind of bullet for enemy
@@ -93,9 +90,12 @@ func get_input():
 	if Input.is_action_just_released("PICKUP"):
 		playerWantsToPickupWeapon = false
 	if Input.is_action_just_pressed("DROP"):
-		remove_child(playerWeapon)
+		
 		playerWeapon.Drop()
-		playerWeapon = 0
+		EquipWeapon(knife)
+		#put in backup plan here so player is never defensless
+		#add the backup plan weapon to player
+		
 	# Make sure diagonal movement isn't faster
 	
 	#I will need to add a reload, pickup and drop weapon actions/buttons

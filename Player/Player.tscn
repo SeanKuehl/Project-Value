@@ -20,3 +20,6 @@ texture = ExtResource( 1 )
 
 [node name="GunPosition" type="Position2D" parent="."]
 position = Vector2( 17.746, 12.7135 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true

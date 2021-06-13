@@ -20,7 +20,7 @@ func _on_Area2D_body_entered(entity):
 		pass
 		#do noting, enemies don't pick up weapons
 	if entity.is_in_group("Player"):
-		print("yes")
+		
 		playerInsidePickupArea = true
 		#do the weapon pickup code with the player, and disappear
 		#entity.PlayerPickupWeapon(weaponPlayerWillPickUp.instance())

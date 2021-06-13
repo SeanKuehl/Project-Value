@@ -6,9 +6,10 @@ var speed = 50
 var chaseSpeed = 200
 var velocity = Vector2()
 
-var shootTimer = 0
+#var shootTimer = 0
 
 var playerDetected = false
+var IGotShot = false	#this will make enemy alert if they get shot
 
 var minimap_icon = "mob"
 
@@ -16,9 +17,16 @@ onready var player = get_node('../Player') #this is based on what the player is 
 onready var enemySprite = $manBlue_gun
 onready var blinkTimer = $HurtBlinkTimer
 onready var weaponDropPos = $DropWeaponSpot
+onready var muzzle = $GunMuzzle
+onready var shootTimer = $ShootRateTimer
 onready var weaponToDropUponDeath = preload("res://DroppedWeapons/DroppedWeapon.tscn")
+onready var bulletToShoot = preload("res://Bullets/Bullet.tscn")
 var distanceToPlayer = 0
+var spotPlayerDistance = 200	#this is the distance at which the player is spotted
 	
+#I will hard code what bullets/guns the enemies use so that I can customize it
+#to the enemy without having to also balance things for the player
+#maybe have enemy bullets but not enemy weapons
 
 func _ready():
 	rotation = rand_range(0, 2*PI)
@@ -35,6 +43,7 @@ func I_Got_Hit(damage):
 		queue_free()
 		#do death, they have to at least drop their gun
 	else:
+		IGotShot = true
 		#do damage
 	#set_modulate(Color(0,1,0))
 		enemySprite.set_modulate(Color(59,2,2))
@@ -54,11 +63,15 @@ func DistanceToPlayer(positionA, positionB):
 	return total
 
 
-#func shoot():
+func shoot():
 	
 	
-	#var b = preload("res://BasicEnemyBullet.tscn").instance() 	#make a new kind of bullet for enemy
 	
+	var b = bulletToShoot.instance() 	#make a new kind of bullet for enemy
+	
+	b.transform = muzzle.global_transform
+	get_tree().current_scene.add_child(b)
+	shootTimer.start()
 	
 	
 	#owner.add_child(b)	#this adds the bullet as a child of the node that owns player, in this case the root node
@@ -76,7 +89,7 @@ func SimpleAI(delta):
 	#replace with upon detection
 	#basic AI idea: walk around aimlessly until player detected, then walk toward them and fire
 	
-	if distanceToPlayer <= 200:
+	if distanceToPlayer <= spotPlayerDistance or IGotShot == true:
 		playerDetected = true
 	else:
 		playerDetected = false
@@ -88,11 +101,11 @@ func SimpleAI(delta):
 		#go towards the player
 		look_at(player.position)
 		velocity = transform.x * chaseSpeed	#change velocity to use chase speed
-		shootTimer += 1
+		
 	
-		if shootTimer > 100:
-			#shoot()
-			shootTimer = 0
+		if shootTimer.is_stopped():
+			shoot()
+			
 		var collision = move_and_collide(velocity * delta)
 		
 	else:
