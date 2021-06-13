@@ -23,3 +23,7 @@ position = Vector2( 17.746, 12.7135 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+
+[node name="BlinkTimer" type="Timer" parent="."]
+wait_time = 0.2
+one_shot = true

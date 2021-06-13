@@ -7,12 +7,20 @@ var speed = 400  # speed in pixels/sec
 
 var velocity = Vector2.ZERO
 
+var playerHealth = 100
+
+onready var playerSprite = $soldier1_single_hand
+onready var blinkTimer = $BlinkTimer
+
 var playerWeapon = 0
 var playerWantsToPickupWeapon = false
-var knife = load("res://Weapons/Knife.tscn")
+var defaultWeapon = load("res://Weapons/Knife.tscn")
+var defaultWeaponEquipped = true
 
 func _ready():
-	pass
+	#if I wanted to give player a weapon from the start I could set
+	#defaultweaponequipped to false and put the pistol or something below
+	EquipWeapon(defaultWeapon.instance())
 	#example = preload("res://Weapons/Weapon.tscn").instance()
 	
 	#example.global_position.x - example.GetPlayerHandOffset() = $GunPosition.position
@@ -57,13 +65,28 @@ func Shoot():
 
 func PlayerPickupWeapon(weapon):
 	if playerWantsToPickupWeapon:
+		if defaultWeaponEquipped == true:
+			defaultWeaponEquipped = false
+			#unequip the default weapon
+			UnequipDefault(playerWeapon)
 		EquipWeapon(weapon)
 		return true
 	else:
 		return false
 		#don't pickup weapon
 
-
+func I_Got_Hit(damage):
+	playerHealth -= damage
+	if playerHealth <= 0:
+		pass
+		#do death, go to game over screen
+	else:
+		
+		#do damage
+	#set_modulate(Color(0,1,0))
+		playerSprite.set_modulate(Color(59,2,2))
+		blinkTimer.start()
+	
 
 func get_input():
 	#if is_in_group("Player"):
@@ -90,9 +113,13 @@ func get_input():
 	if Input.is_action_just_released("PICKUP"):
 		playerWantsToPickupWeapon = false
 	if Input.is_action_just_pressed("DROP"):
+		if defaultWeaponEquipped == true:
+			pass
+		else:
+			defaultWeaponEquipped = true
+			playerWeapon.Drop()
+			EquipWeapon(defaultWeapon.instance())
 		
-		playerWeapon.Drop()
-		EquipWeapon(knife)
 		#put in backup plan here so player is never defensless
 		#add the backup plan weapon to player
 		
@@ -101,9 +128,14 @@ func get_input():
 	#I will need to add a reload, pickup and drop weapon actions/buttons
 
 	velocity = velocity.normalized() * speed
-	
+
+func UnequipDefault(weapon):
+	weapon.queue_free()
 
 func _physics_process(delta):
+	if blinkTimer.is_stopped():
+		playerSprite.set_modulate(Color(1,1,1,1))
+	
 	look_at(get_global_mouse_position())
 	get_input()
 	velocity = move_and_slide(velocity)

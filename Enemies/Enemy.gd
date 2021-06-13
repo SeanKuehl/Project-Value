@@ -23,13 +23,22 @@ onready var weaponToDropUponDeath = preload("res://DroppedWeapons/DroppedWeapon.
 onready var bulletToShoot = preload("res://Bullets/Bullet.tscn")
 var distanceToPlayer = 0
 var spotPlayerDistance = 200	#this is the distance at which the player is spotted
-	
+
+
+
+var usingSimpleAI = true	#if using simpleAI rotation will happen, if rotation is set it will effect all other AI movement
+
 #I will hard code what bullets/guns the enemies use so that I can customize it
 #to the enemy without having to also balance things for the player
 #maybe have enemy bullets but not enemy weapons
 
 func _ready():
-	rotation = rand_range(0, 2*PI)
+	if usingSimpleAI:
+		rotation = rand_range(0, 2*PI)
+	else:
+		pass
+	
+	
 	
 	
 #I'll also need some kind of die function
@@ -79,6 +88,56 @@ func shoot():
 	#i've looked up lots of fixes but none of them seem to work!
 	#b.transform = $EnemyMuzzle.global_transform	#this will spawn the bullet at the point Muzzle found on the player
 
+func UpAndDownPatrollingAI(delta):
+	
+	#like the simple AI, but instead of walking around randomly,
+	#they walk up and down(like in a halway/patrolling) until they either see the player
+	#or are shot
+	
+	
+	
+	
+	velocity = transform.x * speed	#this is fine unless it spots the player
+	distanceToPlayer = DistanceToPlayer(player.position, position)
+	#print(distanceToPlayer)
+	#replace with upon detection
+	
+	
+	if distanceToPlayer <= spotPlayerDistance or IGotShot == true:
+		playerDetected = true
+		
+	else:
+		playerDetected = false
+	
+	
+	#make function that does below:(remember what an exponent really is for ^1/2)
+	
+	if playerDetected:
+		#go towards the player
+		look_at(player.position)
+		velocity = transform.x * chaseSpeed	#change velocity to use chase speed
+		
+	
+		if shootTimer.is_stopped():
+			shoot()
+			
+		var collision = move_and_collide(velocity * delta)
+		
+	else:
+		#walk around aimlessly
+		var collision = move_and_collide(velocity * delta)
+		if collision:
+			speed = speed * -1
+			
+			if speed < 0:
+				enemySprite.set_flip_h(true)
+			else:
+				enemySprite.set_flip_h(false)
+			
+			
+			velocity.y += speed
+			velocity = move_and_collide(velocity * delta)
+		
 	
 func SimpleAI(delta):
 	
@@ -109,7 +168,7 @@ func SimpleAI(delta):
 		var collision = move_and_collide(velocity * delta)
 		
 	else:
-		#walk around aimlessly
+		#patrol
 		var collision = move_and_collide(velocity * delta)
 		if collision:
 			velocity = velocity.bounce(collision.normal).rotated(rand_range(-PI/4, PI/4))

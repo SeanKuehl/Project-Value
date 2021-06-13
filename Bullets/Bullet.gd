@@ -26,7 +26,7 @@ func WhenEntered(entity):
 		
 		#deal the bullets damage to the enemy
 	if entity.is_in_group("Player"):
-		pass
+		entity.I_Got_Hit(damage)
 		#maybe deal damage to player, or maybe have different bullets for enemies
 	queue_free()	#destroy the bullet if it collided with a wall
 	

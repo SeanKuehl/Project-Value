@@ -21,7 +21,7 @@ position = Vector2( 0.25, 0 )
 shape = SubResource( 1 )
 
 [node name="ExistenceTimer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.1
 one_shot = true
 
 [connection signal="body_entered" from="." to="." method="_on_Area2D_body_entered"]

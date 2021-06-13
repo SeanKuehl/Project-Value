@@ -3,7 +3,7 @@ extends KinematicBody2D
 
 var bullet = load("res://Bullets/Bullet.tscn")
 var droppedVersion = load("res://DroppedWeapons/DroppedWeapon.tscn")	#this must be nothing for now to avoid a cyclic reference, see Drop() for where it's actually put	
-var displayName = "testing pistol"
+var displayName = "pistol"
 var ammoInClip = 5	#this is how much ammo the weapon can shoot before it has to reload
 var ammoInPool = 25	#this is how much ammo the weapon can shoot before you run out of ammo
 var maxAmmoInClip = 5

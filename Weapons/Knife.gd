@@ -31,9 +31,9 @@ func Shoot():
 	if coolDown.is_stopped():
 		shootSound.play()
 		
-		#var newBullet = bullet.instance()
-		#newBullet.transform = gunMuzzle.global_transform
-		#get_tree().current_scene.add_child(newBullet)
+		var newBullet = bullet.instance()
+		newBullet.transform = gunMuzzle.global_transform
+		get_tree().current_scene.add_child(newBullet)
 		
 		coolDown.start()
 		
