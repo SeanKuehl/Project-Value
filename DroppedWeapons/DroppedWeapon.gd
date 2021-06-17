@@ -2,14 +2,23 @@ extends Area2D
 
 
 var weaponPlayerWillPickUp = load("res://Weapons/Weapon.tscn")
-var weaponName = "pistol"
+
 onready var player = get_node('../Player') #this is based on what the player is called in the scene tree, not it's actual scene
 var distanceToPlayer = 0
 var playerInsidePickupArea = false
 
+var ammoInClip = -1	#the -1 is to show that they haven't been set yet, and so the default for the weapon that's going to be picked up should be used
+var ammoInPool = -1
+var weaponName = "Pistol"
+
+
 func _ready():
 	pass
 
+
+func SetPickupGunValues(clip, pool):
+	ammoInClip = clip
+	ammoInPool = pool
 
 #when player enters area, they are able to pickup gun, check this in physics process
 #when player leaves they cannot
@@ -30,7 +39,13 @@ func _on_Area2D_body_entered(entity):
 func _physics_process(delta):
 	#distanceToPlayer = DistanceToPlayer(player.position, position)
 	if playerInsidePickupArea == true:
-		var worked = player.PlayerPickupWeapon(weaponPlayerWillPickUp.instance())
+		var weapon = weaponPlayerWillPickUp.instance()
+		if ammoInClip == -1 and ammoInPool == -1:
+			pass
+		else:
+			weapon.SetPickedUpValues(ammoInClip, ammoInPool)
+		
+		var worked = player.PlayerPickupWeapon(weapon)
 		if worked:
 			queue_free()
 	#print(distanceToPlayer)

@@ -3,7 +3,7 @@ extends KinematicBody2D
 
 var bullet = load("res://Bullets/Bullet.tscn")
 var droppedVersion = load("res://DroppedWeapons/DroppedWeapon.tscn")	#this must be nothing for now to avoid a cyclic reference, see Drop() for where it's actually put	
-var displayName = "pistol"
+var displayName = "Pistol"
 var ammoInClip = 5	#this is how much ammo the weapon can shoot before it has to reload
 var ammoInPool = 25	#this is how much ammo the weapon can shoot before you run out of ammo
 var maxAmmoInClip = 5
@@ -25,10 +25,29 @@ var playerHandOffset = -5	#the middle of the gun is placed at the player's "gun 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	pass
+
+func SetGlobals():
+	Global.currentAmmoInClip = ammoInClip
+	Global.currentAmmoInPool = ammoInPool
+	Global.currentWeaponName = displayName
+	
+	
+func SetPickedUpValues(clip, pool):
+	ammoInClip = clip
+	ammoInPool = pool
 
 func GetPlayerHandOffset():
 	return playerHandOffset
+	
+func GetAmmoInClip():
+	return ammoInClip
+	
+func GetAmmoInPool():
+	return ammoInPool
+
+func GetDisplayName():
+	return displayName
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
@@ -59,6 +78,8 @@ func Reload():
 			#print(ammoInClip, ammoInPool)
 			
 			#there's not enough to reload a full mag, just reload as much as possible
+		Global.currentAmmoInClip = ammoInClip
+		Global.currentAmmoInPool = ammoInPool
 	
 func Shoot():
 	if ammoInClip > 0 and coolDown.is_stopped():
@@ -71,11 +92,12 @@ func Shoot():
 		coolDown.start()
 		ammoInClip -= 1
 		#print(ammoInClip, ammoInPool)
-		
+		Global.currentAmmoInClip = ammoInClip
 		
 func Drop():
 	
 	var dropped = droppedVersion.instance()
+	dropped.SetPickupGunValues(ammoInClip, ammoInPool)
 	dropped.transform = gunMuzzle.global_transform	#drop at the muzzle so it drops visibly in front of the player
 	#droppedWeapon.position = weaponDropPos.position
 	get_tree().current_scene.add_child(dropped)

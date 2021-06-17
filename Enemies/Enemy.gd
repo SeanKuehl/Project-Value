@@ -33,6 +33,8 @@ var usingSimpleAI = true	#if using simpleAI rotation will happen, if rotation is
 #maybe have enemy bullets but not enemy weapons
 
 func _ready():
+	
+	
 	if usingSimpleAI:
 		rotation = rand_range(0, 2*PI)
 	else:
@@ -40,6 +42,8 @@ func _ready():
 	
 	
 	
+func Test(clip, pool, name):
+	print(clip,pool,name)
 	
 #I'll also need some kind of die function
 func I_Got_Hit(damage):

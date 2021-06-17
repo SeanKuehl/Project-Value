@@ -22,6 +22,16 @@ func _ready():
 	reloadSound = $ReloadSound
 	gunMuzzle = $Muzzle
 	
+	
+func SetGlobals():
+	Global.currentWeaponName = "Knife"
+	Global.currentAmmoInClip = 0
+	Global.currentAmmoInPool = 0
+	
+	
+	#.SetGlobals()	this calls the parent/super classes function
+
+
 #this overrides the base class Shoot because a Knife doesn't have ammo the way a regular gun does
 func Shoot():
 	#apparently if I'm overriding a function I put this as the last line of my function:

@@ -15,12 +15,22 @@ onready var blinkTimer = $BlinkTimer
 var playerWeapon = 0
 var playerWantsToPickupWeapon = false
 var defaultWeapon = load("res://Weapons/Knife.tscn")
-var defaultWeaponEquipped = true
+var test = load("res://Weapons/Weapon.tscn")
+var defaultWeaponEquipped = false
+#I can equip any weapon to the player, I just need to do the 
+#equipweapon in the ready() and set defaultweaponequipped to false
+
+#signal weaponInfoToHud
 
 func _ready():
+	#emit_signal("weaponInfoToHud")
+	Global.currentPlayerHealth = playerHealth
+	
 	#if I wanted to give player a weapon from the start I could set
 	#defaultweaponequipped to false and put the pistol or something below
-	EquipWeapon(defaultWeapon.instance())
+	#EquipWeapon(defaultWeapon.instance())
+	EquipWeapon(test.instance())
+	
 	#example = preload("res://Weapons/Weapon.tscn").instance()
 	
 	#example.global_position.x - example.GetPlayerHandOffset() = $GunPosition.position
@@ -38,6 +48,7 @@ func _ready():
 #body.is_in_group("Player")
 
 func EquipWeapon(weapon):
+	weapon.SetGlobals()
 	weapon.global_position = $GunPosition.position
 	weapon.global_position.x = weapon.global_position.x - weapon.GetPlayerHandOffset()
 	#this works! adjust after setting it to the position works!
@@ -86,7 +97,7 @@ func I_Got_Hit(damage):
 	#set_modulate(Color(0,1,0))
 		playerSprite.set_modulate(Color(59,2,2))
 		blinkTimer.start()
-	
+	Global.currentPlayerHealth = playerHealth
 
 func get_input():
 	#if is_in_group("Player"):
@@ -133,6 +144,7 @@ func UnequipDefault(weapon):
 	weapon.queue_free()
 
 func _physics_process(delta):
+	
 	if blinkTimer.is_stopped():
 		playerSprite.set_modulate(Color(1,1,1,1))
 	
