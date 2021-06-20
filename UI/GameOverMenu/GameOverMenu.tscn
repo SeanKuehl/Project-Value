@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://UI/GameOverMenu/GameOverMenu.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Play Again" type="Button" parent="."]
+margin_left = 347.0
+margin_top = 194.0
+margin_right = 424.0
+margin_bottom = 214.0
+text = "Play Again"
+
+[node name="Quit" type="Button" parent="."]
+margin_left = 366.0
+margin_top = 253.0
+margin_right = 406.0
+margin_bottom = 273.0
+text = "Quit"
+
+[node name="Label" type="Label" parent="."]
+margin_left = 300.0
+margin_top = 137.0
+margin_right = 482.0
+margin_bottom = 151.0
+text = "You were killed, Game Over."
+
+[connection signal="pressed" from="Play Again" to="." method="_on_Play_Again_pressed"]
+[connection signal="pressed" from="Quit" to="." method="_on_Quit_pressed"]

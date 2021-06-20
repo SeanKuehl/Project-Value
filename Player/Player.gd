@@ -17,6 +17,7 @@ var playerWantsToPickupWeapon = false
 var defaultWeapon = load("res://Weapons/Knife.tscn")
 var test = load("res://Weapons/Weapon.tscn")
 var defaultWeaponEquipped = false
+
 #I can equip any weapon to the player, I just need to do the 
 #equipweapon in the ready() and set defaultweaponequipped to false
 
@@ -24,12 +25,19 @@ var defaultWeaponEquipped = false
 
 func _ready():
 	#emit_signal("weaponInfoToHud")
-	Global.currentPlayerHealth = playerHealth
 	
+	
+	#this is for the play again button in the game over menu
+	var thisLevel = get_tree().current_scene.filename
+	Global.currentLevel = thisLevel
 	#if I wanted to give player a weapon from the start I could set
 	#defaultweaponequipped to false and put the pistol or something below
 	#EquipWeapon(defaultWeapon.instance())
-	EquipWeapon(test.instance())
+	#the problem is that this is called before everything else everytime
+	#a player is created. Making a new similar player object is bad practice
+	#so instead I'll find another way to have the player equip the starting weapons that's
+	#not the _ready() function
+	
 	
 	#example = preload("res://Weapons/Weapon.tscn").instance()
 	
@@ -47,6 +55,8 @@ func _ready():
 
 #body.is_in_group("Player")
 
+
+
 func EquipWeapon(weapon):
 	weapon.SetGlobals()
 	weapon.global_position = $GunPosition.position
@@ -55,6 +65,12 @@ func EquipWeapon(weapon):
 	playerWeapon = weapon
 	add_child(weapon)
 	#print("this worked!")
+	
+func SetHealth(newPlayerHealth):
+	playerHealth = newPlayerHealth
+	
+func GetHealth():
+	return playerHealth
 
 func Reload():
 	
@@ -89,7 +105,7 @@ func PlayerPickupWeapon(weapon):
 func I_Got_Hit(damage):
 	playerHealth -= damage
 	if playerHealth <= 0:
-		pass
+		var _uselessValue = get_tree().change_scene("res://UI/GameOverMenu/GameOverMenu.tscn")
 		#do death, go to game over screen
 	else:
 		
@@ -140,10 +156,27 @@ func get_input():
 
 	velocity = velocity.normalized() * speed
 
+#this is to be used to load from previouse level
+func SwapEquippedWeapon(weapon):
+	if defaultWeaponEquipped == true:
+			
+		if defaultWeaponEquipped == true:
+			defaultWeaponEquipped = false
+			#unequip the default weapon
+			UnequipDefault(playerWeapon)
+		EquipWeapon(weapon)
+	else:
+		
+		playerWeapon.Drop()
+		EquipWeapon(weapon)
+		print("the weapon isn't there at the end, why?")
+		
+	
+
 func UnequipDefault(weapon):
 	weapon.queue_free()
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	
 	if blinkTimer.is_stopped():
 		playerSprite.set_modulate(Color(1,1,1,1))

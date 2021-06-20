@@ -17,6 +17,7 @@ func _physics_process(delta):
 	else:
 		text.text = String(Global.currentAmmoInClip) + " / " + String(Global.currentAmmoInPool)
 		secondLabel.text = Global.currentWeaponName
+		#print(Global.currentAmmoInClip, Global.currentAmmoInPool)
 		
 	healthLabel.text = "Player Health: " + String(Global.currentPlayerHealth)
 	
