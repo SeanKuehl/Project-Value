@@ -157,6 +157,7 @@ func get_input():
 	velocity = velocity.normalized() * speed
 
 #this is to be used to load from previouse level
+#this function isn't used because it doesn't work, there are now alternatives, see level2 .gd
 func SwapEquippedWeapon(weapon):
 	if defaultWeaponEquipped == true:
 			
@@ -169,7 +170,7 @@ func SwapEquippedWeapon(weapon):
 		
 		playerWeapon.Drop()
 		EquipWeapon(weapon)
-		print("the weapon isn't there at the end, why?")
+		
 		
 	
 
